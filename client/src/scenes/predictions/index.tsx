@@ -1,7 +1,7 @@
 import DashboardBox from "@/components/DashboardBox";
 import FlexBetween from "@/components/FlexBetween";
-import { useGetKpisQuery } from "@/state/api";
 import { Box, Button, Typography, useTheme } from "@mui/material";
+import axios from "axios";
 import { useMemo, useState } from "react";
 import {
   CartesianGrid,
@@ -16,23 +16,66 @@ import {
 } from "recharts";
 import regression, { DataPoint } from "regression";
 
+const fetchData = async () => {
+  try {
+    const response = await axios.get("http://localhost:4000/kpi");
+    // Replace 'your_api_endpoint_here' with the actual API endpoint
+
+    const data = response.data;
+    console.log(data); // This will log the fetched JSON data to the console
+
+    // Now you can access the data properties like totalProfit, totalRevenue, etc.
+    console.log("Total Profit:", data.totalProfit);
+    console.log("Total Revenue:", data.totalRevenue);
+    console.log("Total Expenses:", data.totalExpenses);
+
+    // Access monthlyData array
+    const monthlyData = data.monthlyData;
+    monthlyData.forEach((month) => {
+      console.log("Month:", month.month);
+      console.log("Revenue:", month.revenue);
+      console.log("Expenses:", month.expenses);
+      console.log("Operational Expenses:", month.operationalExpenses);
+      console.log("Non-Operational Expenses:", month.nonOperationalExpenses);
+      console.log("------------------------");
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+  }
+};
+
+// Call the fetchData function
+
 const Predictions = () => {
+  fetchData();
   const { palette } = useTheme();
   const [isPredictions, setIsPredictions] = useState(false);
-  const { data: kpiData } = useGetKpisQuery();
+
+  const monthlyData = [
+    { month: "January", revenue: 15000, expenses: 10000 },
+    { month: "February", revenue: 18000, expenses: 12000 },
+    // Add more months as needed
+    { month: "March", revenue: 20000, expenses: 11000 },
+    { month: "April", revenue: 17000, expenses: 10500 },
+    { month: "May", revenue: 19000, expenses: 11500 },
+    { month: "June", revenue: 21000, expenses: 12500 },
+    { month: "July", revenue: 16000, expenses: 9500 },
+    { month: "August", revenue: 22000, expenses: 13500 },
+    { month: "September", revenue: 18000, expenses: 11000 },
+    { month: "October", revenue: 20000, expenses: 12000 },
+    { month: "November", revenue: 23000, expenses: 14000 },
+    { month: "December", revenue: 19000, expenses: 11500 },
+  ];
 
   const formattedData = useMemo(() => {
-    if (!kpiData) return [];
-    const monthData = kpiData[0].monthlyData;
-
-    const formatted: Array<DataPoint> = monthData.map(
+    const formatted: Array<DataPoint> = monthlyData.map(
       ({ revenue }, i: number) => {
         return [i, revenue];
       }
     );
     const regressionLine = regression.linear(formatted);
 
-    return monthData.map(({ month, revenue }, i: number) => {
+    return monthlyData.map(({ month, revenue }, i: number) => {
       return {
         name: month,
         "Actual Revenue": revenue,
@@ -40,7 +83,7 @@ const Predictions = () => {
         "Predicted Revenue": regressionLine.predict(i + 12)[1],
       };
     });
-  }, [kpiData]);
+  }, [monthlyData]);
 
   return (
     <DashboardBox width="100%" height="100%" p="1rem" overflow="hidden">
@@ -100,13 +143,14 @@ const Predictions = () => {
             type="monotone"
             dataKey="Regression Line"
             stroke="#8884d8"
-            dot={false}
+            dot={{ strokeWidth: 5 }} // Add this line to render dots
           />
           {isPredictions && (
             <Line
               strokeDasharray="5 5"
               dataKey="Predicted Revenue"
               stroke={palette.secondary[500]}
+              dot={{ strokeWidth: 5 }} // Add this line to render dots
             />
           )}
         </LineChart>

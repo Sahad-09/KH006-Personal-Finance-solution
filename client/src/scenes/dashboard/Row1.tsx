@@ -1,6 +1,6 @@
 import BoxHeader from "@/components/BoxHeader";
 import DashboardBox from "@/components/DashboardBox";
-import { useGetKpisQuery } from "@/state/api";
+// import { useGetKpisQuery } from "@/state/api";
 import { useTheme } from "@mui/material";
 import { useMemo } from "react";
 import {
@@ -18,49 +18,115 @@ import {
   Area,
 } from "recharts";
 
+// Dummy Data
+// Updated Dummy Data for Row2
+const dummyData = [
+  {
+    monthlyData: [
+      { month: "January", revenue: 15000, expenses: 10000 },
+      { month: "February", revenue: 18000, expenses: 12000 },
+      // Add more months as needed
+      { month: "March", revenue: 20000, expenses: 11000 },
+      { month: "April", revenue: 17000, expenses: 10500 },
+      { month: "May", revenue: 19000, expenses: 11500 },
+      { month: "June", revenue: 21000, expenses: 12500 },
+      { month: "July", revenue: 16000, expenses: 9500 },
+      { month: "August", revenue: 22000, expenses: 13500 },
+      { month: "September", revenue: 18000, expenses: 11000 },
+      { month: "October", revenue: 20000, expenses: 12000 },
+      { month: "November", revenue: 23000, expenses: 14000 },
+      { month: "December", revenue: 19000, expenses: 11500 },
+    ],
+  },
+  // Add more data objects as needed
+  {
+    monthlyData: [
+      { month: "January", revenue: 12000, expenses: 8000 },
+      { month: "February", revenue: 15000, expenses: 10000 },
+      { month: "March", revenue: 17000, expenses: 11000 },
+      { month: "April", revenue: 14000, expenses: 9000 },
+      { month: "May", revenue: 16000, expenses: 10000 },
+      { month: "June", revenue: 18000, expenses: 11000 },
+      { month: "July", revenue: 13000, expenses: 8000 },
+      { month: "August", revenue: 19000, expenses: 12000 },
+      { month: "September", revenue: 16000, expenses: 10000 },
+      { month: "October", revenue: 18000, expenses: 11000 },
+      { month: "November", revenue: 20000, expenses: 12000 },
+      { month: "December", revenue: 17000, expenses: 10500 },
+    ],
+  },
+];
+
+const revenueExpensesDummy = dummyData[0].monthlyData.map(
+  ({ month, revenue, expenses }) => ({
+    name: month.substring(0, 3),
+    revenue,
+    expenses,
+  })
+);
+
+const revenueProfitDummy = dummyData[0].monthlyData.map(
+  ({ month, revenue, expenses }) => ({
+    name: month.substring(0, 3),
+    revenue,
+    profit: (revenue - expenses).toFixed(2),
+  })
+);
+
+const revenueDummy = dummyData[0].monthlyData.map(({ month, revenue }) => ({
+  name: month.substring(0, 3),
+  revenue,
+}));
+
 const Row1 = () => {
   const { palette } = useTheme();
-  const { data } = useGetKpisQuery();
 
-  console.log(data);
+  const revenueExpenses = useMemo(() => revenueExpensesDummy, []);
+  const revenueProfit = useMemo(() => revenueProfitDummy, []);
+  const revenue = useMemo(() => revenueDummy, []);
 
-  const revenue = useMemo(() => {
-    return (
-      data &&
-      data[0].monthlyData.map(({ month, revenue }) => {
-        return {
-          name: month.substring(0, 3),
-          revenue: revenue,
-        };
-      })
-    );
-  }, [data]);
+  // const { palette } = useTheme();
+  // const { data } = useGetKpisQuery();
 
-  const revenueExpenses = useMemo(() => {
-    return (
-      data &&
-      data[0].monthlyData.map(({ month, revenue, expenses }) => {
-        return {
-          name: month.substring(0, 3),
-          revenue: revenue,
-          expenses: expenses,
-        };
-      })
-    );
-  }, [data]);
+  // console.log(data);
 
-  const revenueProfit = useMemo(() => {
-    return (
-      data &&
-      data[0].monthlyData.map(({ month, revenue, expenses }) => {
-        return {
-          name: month.substring(0, 3),
-          revenue: revenue,
-          profit: (revenue - expenses).toFixed(2),
-        };
-      })
-    );
-  }, [data]);
+  // const revenue = useMemo(() => {
+  //   return (
+  //     data &&
+  //     data[0].monthlyData.map(({ month, revenue }) => {
+  //       return {
+  //         name: month.substring(0, 3),
+  //         revenue: revenue,
+  //       };
+  //     })
+  //   );
+  // }, [data]);
+
+  // const revenueExpenses = useMemo(() => {
+  //   return (
+  //     data &&
+  //     data[0].monthlyData.map(({ month, revenue, expenses }) => {
+  //       return {
+  //         name: month.substring(0, 3),
+  //         revenue: revenue,
+  //         expenses: expenses,
+  //       };
+  //     })
+  //   );
+  // }, [data]);
+
+  // const revenueProfit = useMemo(() => {
+  //   return (
+  //     data &&
+  //     data[0].monthlyData.map(({ month, revenue, expenses }) => {
+  //       return {
+  //         name: month.substring(0, 3),
+  //         revenue: revenue,
+  //         profit: (revenue - expenses).toFixed(2),
+  //       };
+  //     })
+  //   );
+  // }, [data]);
 
   return (
     <>
