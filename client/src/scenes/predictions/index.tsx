@@ -124,10 +124,7 @@ const Predictions = () => {
             });
             setIsPredictions(!isPredictions);
             setResponse(res.data);
-            setPrompt(
-              currentData +
-                " Look at these current stuff and tell me room for improvement regarding finance for my life"
-            );
+            setPrompt("Give financial tips");
           }}
           sx={{
             color: palette.grey[900],
