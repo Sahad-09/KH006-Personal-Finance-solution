@@ -54,9 +54,27 @@ const fetchData = async () => {
 // Call the fetchData function
 
 const Predictions = () => {
+  const [response, setResponse] = useState("");
+  const [prompt, setPrompt] = useState("");
+
+  const currentData = `{ month: "January", revenue: 15000, expenses: 10000 },
+  { month: "February", revenue: 18000, expenses: 12000 },
+  // Add more months as needed
+  { month: "March", revenue: 20000, expenses: 11000 },
+  { month: "April", revenue: 17000, expenses: 10500 },
+  { month: "May", revenue: 19000, expenses: 11500 },
+  { month: "June", revenue: 21000, expenses: 12500 },
+  { month: "July", revenue: 16000, expenses: 9500 },
+  { month: "August", revenue: 22000, expenses: 13500 },
+  { month: "September", revenue: 18000, expenses: 11000 },
+  { month: "October", revenue: 20000, expenses: 12000 },
+  { month: "November", revenue: 23000, expenses: 14000 },
+  { month: "December", revenue: 19000, expenses: 11500 },`;
+
   fetchData();
   const { palette } = useTheme();
   const [isPredictions, setIsPredictions] = useState(false);
+  const [predictedValues, setPredictedValues] = useState("");
 
   const monthlyData = [
     { month: "January", revenue: 15000, expenses: 10000 },
@@ -82,28 +100,35 @@ const Predictions = () => {
     );
     const regressionLine = regression.linear(formatted);
 
-    return monthlyData.map(({ month, revenue }, i: number) => {
+    const result = monthlyData.map(({ month, revenue }, i: number) => {
+      const predictedRevenue = regressionLine.predict(i + 12)[1];
+      console.log(`Predicted Revenue for ${month}: ${predictedRevenue}`);
       return {
         name: month,
         "Actual Revenue": revenue,
         "Regression Line": regressionLine.points[i][1],
-        "Predicted Revenue": regressionLine.predict(i + 12)[1],
+        "Predicted Revenue": predictedRevenue,
       };
     });
+
+    return result;
   }, [monthlyData]);
 
   return (
     <DashboardBox width="100%" height="100%" p="1rem" overflow="hidden">
-      <FlexBetween m="1rem 2.5rem" gap="1rem">
-        <Box>
-          <Typography variant="h3">Revenue and Predictions</Typography>
-          <Typography variant="h6">
-            charted revenue and predicted revenue based on a simple linear
-            regression model
-          </Typography>
-        </Box>
+      <div className="container">
         <Button
-          onClick={() => setIsPredictions(!isPredictions)}
+          onClick={async () => {
+            const res = await axios.post("http://localhost:3000/chat", {
+              prompt,
+            });
+            setIsPredictions(!isPredictions);
+            setResponse(res.data);
+            setPrompt(
+              currentData +
+                " Look at these current stuff and tell me room for improvement regarding finance for my life"
+            );
+          }}
           sx={{
             color: palette.grey[900],
             backgroundColor: palette.grey[700],
@@ -111,7 +136,16 @@ const Predictions = () => {
           }}>
           Show Predicted Revenue for Next Year
         </Button>
-      </FlexBetween>
+        <Typography variant="h3">Revenue and Predictions</Typography>
+      </div>
+      <Box>
+        <Typography variant="h6">
+          charted revenue and predicted revenue based on a simple linear
+          regression model
+        </Typography>
+      </Box>
+      <Typography variant="h6">{response}</Typography>
+      <FlexBetween m="1rem 2.5rem" gap="1rem"></FlexBetween>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={formattedData}

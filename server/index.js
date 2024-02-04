@@ -12,10 +12,10 @@ import KPI from "./models/KPI.js";
 import Product from "./models/Product.js";
 import Transaction from "./models/Transaction.js";
 import { kpis, products, transactions } from "./data/data.js";
+import chatRoutes from "./routes/chatRoutes.js"
 
 /* CONFIGURATIONS */
 dotenv.config();
-const chatRoutes = require("./routes/chatRoutes.js");
 const app = express();
 app.use(express.json());
 app.use(helmet());

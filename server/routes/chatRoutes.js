@@ -1,28 +1,26 @@
-const express = require("express");
-const dotenv = require("dotenv");
+import express from "express";
+import dotenv from "dotenv";
 dotenv.config();
 
 const router = express.Router();
 
-const OpenAI = require("openai")
+import OpenAI from "openai";
 
 const openai = new OpenAI({
     apikey: process.env.OPENAI_API_KEY,
-
 });
 
 router.post("/chat", async (req, res) => {
     const { prompt } = req.body;
-
 
     try {
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [
                 {
-                    "role": "assistant",
-                    "content": prompt
-                }
+                    role: "assistant",
+                    content: prompt,
+                },
             ],
             temperature: 1,
             max_tokens: 256,
@@ -32,11 +30,9 @@ router.post("/chat", async (req, res) => {
         });
 
         res.send(response.choices[0].message.content);
-
-
     } catch (err) {
-        res.status(500).send(err)
+        res.status(500).send(err);
     }
-})
+});
 
-module.exports = router;
+export default router;
