@@ -15,6 +15,7 @@ import { kpis, products, transactions } from "./data/data.js";
 
 /* CONFIGURATIONS */
 dotenv.config();
+const chatRoutes = require("./routes/chatRoutes.js");
 const app = express();
 app.use(express.json());
 app.use(helmet());
@@ -23,6 +24,7 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+app.use("/", chatRoutes);
 
 /* ROUTES */
 app.use("/kpi", kpiRoutes);

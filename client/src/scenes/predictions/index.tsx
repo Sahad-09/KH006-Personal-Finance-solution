@@ -19,26 +19,33 @@ import regression, { DataPoint } from "regression";
 const fetchData = async () => {
   try {
     const response = await axios.get("http://localhost:4000/kpi");
+    const data = response.data;
+
+    console.log("YOYO ", data[0].monthlyData);
+
+    for (let i = 0; i < 10; i++) {
+      // console.log(`Month: ${data[0].monthlyData[i].month}`);
+      // console.log(`Revenue: ${data[0].monthlyData[i].revenue}`);
+      // console.log(`Expenses: ${data[0].monthlyData[i].expenses}`);
+      console.log("-----------");
+    }
+
     // Replace 'your_api_endpoint_here' with the actual API endpoint
 
-    const data = response.data;
-    console.log(data); // This will log the fetched JSON data to the console
+    // // Now you can access the data properties like totalProfit, totalRevenue, etc.
+    // console.log("Total Revenue:", data.totalRevenue);
+    // console.log("Total Expenses:", data.totalExpenses);
 
-    // Now you can access the data properties like totalProfit, totalRevenue, etc.
-    console.log("Total Profit:", data.totalProfit);
-    console.log("Total Revenue:", data.totalRevenue);
-    console.log("Total Expenses:", data.totalExpenses);
-
-    // Access monthlyData array
-    const monthlyData = data.monthlyData;
-    monthlyData.forEach((month) => {
-      console.log("Month:", month.month);
-      console.log("Revenue:", month.revenue);
-      console.log("Expenses:", month.expenses);
-      console.log("Operational Expenses:", month.operationalExpenses);
-      console.log("Non-Operational Expenses:", month.nonOperationalExpenses);
-      console.log("------------------------");
-    });
+    // // Access monthlyData array
+    // const monthlyData = data.monthlyData;
+    // monthlyData.forEach((month) => {
+    //   console.log("Month:", month.month);
+    //   console.log("Revenue:", month.revenue);
+    //   console.log("Expenses:", month.expenses);
+    //   console.log("Operational Expenses:", month.operationalExpenses);
+    //   console.log("Non-Operational Expenses:", month.nonOperationalExpenses);
+    //   console.log("------------------------");
+    // });
   } catch (error) {
     console.error("Error fetching data:", error.message);
   }

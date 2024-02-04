@@ -1,25 +1,46 @@
 import BoxHeader from "@/components/BoxHeader";
 import DashboardBox from "@/components/DashboardBox";
 import FlexBetween from "@/components/FlexBetween";
-import {
-  useGetKpisQuery,
-  useGetProductsQuery,
-  useGetTransactionsQuery,
-} from "@/state/api";
 import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid, GridCellParams } from "@mui/x-data-grid";
 import React, { useMemo } from "react";
 import { Cell, Pie, PieChart } from "recharts";
 
+const generateDummyData = () => {
+  // Generate dummy KPI data
+  const kpiData = [
+    {
+      totalExpenses: 1500,
+      expensesByCategory: {
+        Food: 300,
+        Rent: 500,
+        Utilities: 200,
+        Entertainment: 250,
+      },
+    },
+  ];
+
+  // Generate dummy product data
+  const productData = [
+    { id: "1", expense: 300, price: 50 },
+    { id: "2", expense: 500, price: 100 },
+    { id: "3", expense: 200, price: 25 },
+  ];
+
+  // Generate dummy transaction data
+  const transactionData = [
+    { id: "1", buyer: "John", amount: 150, productIds: ["1", "2"] },
+    { id: "2", buyer: "Alice", amount: 50, productIds: ["3"] },
+  ];
+
+  return { kpiData, productData, transactionData };
+};
 const Row3 = () => {
   const { palette } = useTheme();
   const pieColors = [palette.primary[800], palette.primary[500]];
 
-  const { data: kpiData } = useGetKpisQuery();
-  const { data: productData } = useGetProductsQuery();
-  const { data: transactionData } = useGetTransactionsQuery();
-
-  console.log("TRansaction: ", transactionData);
+  // Replace API calls with dummy data
+  const { kpiData, productData, transactionData } = generateDummyData();
 
   const pieChartData = useMemo(() => {
     if (kpiData) {
